@@ -6,6 +6,7 @@ var sha1=require('node-sha1');
 var fs=require("fs");
 var UserModel=require('../config/UersSchema')
 var TextualModel=require('../config/Textual')
+var YYModel=require('../config/Yy')
 var app=express();
 var multer  = require('multer');
 var upload = multer({dest: 'upload_tmp/'});
@@ -20,8 +21,9 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-console.log(this)
+console.log(req)
   res.header('Access-Control-Allow-Origin', '*');
+   res.header('Access-Control-Allow-Method:POST,GET');
   res.json({"小妹":"333"})
 
 });
@@ -82,7 +84,7 @@ router.post('/AcceptText',upload.any(),function(req, res, next){
 		imgUrls=[],  // 存储 url 
 		Reg=new RegExp("wxfile://|http://tmp/") 
 		path=req.files[0].path,  //文件的信息
-		obj={'openid':openid,'content':content,'imgUrls':imgUrls}, 
+		obj={'openid':openid,'content':content,'imgUrls':imgUrls,'nub':0}, 
 		des_file="./public/images/"+originalname;
 		imgUrl.forEach((v,i)=>{
 		  let img=v.replace(Reg,"")
@@ -108,14 +110,15 @@ router.post('/AcceptText',upload.any(),function(req, res, next){
 	// TextualModel.create(obj)
 	// console.log(content)
 	// res.json({"dd":"content})  
-
-
-
-
-
-
-
-
-
-
+router.post('/checklogin',(req,res)=>{
+	let {username,password}=req.body;
+	YYModel.find({username,password},function(err,doc){
+		if(err){
+			throw err
+		}else{
+			res.send(doc)
+		}
+		
+	})
+})
 module.exports = router;

@@ -3,7 +3,8 @@ var UserModel=require('./UersSchema')
 var TextualSchema =mongoose.Schema({
     openid:{ type: String, ref: 'TextualSchema' },
 	content:String,
-	imgUrls:Array
+	imgUrls:Array,
+	nub:String
 
 })
 
